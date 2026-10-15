@@ -1,11 +1,20 @@
+#[path = "api.rs"]
 pub mod api;
+#[path = "audio.rs"]
 pub mod audio;
+#[path = "download_pacing.rs"]
 pub mod download_pacing;
+#[path = "fs.rs"]
 pub mod fs;
+#[path = "import.rs"]
 pub mod import;
+#[path = "opfs.rs"]
 pub mod opfs;
+#[path = "recovery.rs"]
 pub mod recovery;
+#[path = "recovery_policy.rs"]
 pub mod recovery_policy;
+#[path = "webcodecs.rs"]
 pub mod webcodecs;
 
 use std::cell::RefCell;
