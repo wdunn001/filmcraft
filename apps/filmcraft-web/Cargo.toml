@@ -17,7 +17,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
-craft-runtime = { git = "https://github.com/wdunn001/craft-libs", rev = "7c2c52d8b818c42201a10c235bb56f5c15d643a4" }
+craft-runtime = { git = "https://github.com/wdunn001/craft-libs", branch = "expand-craft-gpu-ecosystem" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 filmcraft-engine = { workspace = true }
