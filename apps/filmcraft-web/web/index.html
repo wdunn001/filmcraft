@@ -72,7 +72,19 @@
     const v = build.startsWith("__") ? "" : "?v=" + build;
     const t0 = performance.now();
     const params = new URLSearchParams(location.search);
-    try {
+    const craftRuntimeSmoke = params.has("craftRuntime");
+    if (craftRuntimeSmoke) {
+      const canvas = document.getElementById("filmcraft_canvas");
+      if (canvas) canvas.style.display = "none";
+      const loading = document.getElementById("loading");
+      if (loading) {
+        loading.insertAdjacentHTML(
+          "beforeend",
+          '<p id="status">craft-runtime smoke only (FilmCraft wasm/WebGPU skipped; loading SharedWorker…)</p>',
+        );
+      }
+      window.filmcraftLoad.craftRuntimeSmoke = true;
+    } else try {
       const { default: init, start } = await import("./filmcraft_web.js" + v);
       await init({ module_or_path: new URL("filmcraft_web_bg.wasm" + v, location.href) });
       window.filmcraftLoad.wasmMs = performance.now() - t0;
