@@ -32,6 +32,9 @@ thread_local! {
     static ACTIONS: RefCell<Vec<Action>> = const { RefCell::new(Vec::new()) };
     static CTX: RefCell<Option<egui::Context>> = const { RefCell::new(None) };
     static INFO: RefCell<serde_json::Value> = const { RefCell::new(serde_json::Value::Null) };
+    /// Singleton craft-runtime bridge backed by the OPFS warm tier (craft-libs#10).
+    static CRAFT_BRIDGE: RefCell<crate::craft_runtime_bridge::CraftRuntimeBridge> =
+        RefCell::new(crate::craft_runtime_bridge::CraftRuntimeBridge::with_opfs_sink());
 }
 
 /// Run `f` on the UI thread at the next frame.
@@ -69,6 +72,19 @@ pub fn set_info(key: &str, v: serde_json::Value) {
 
 pub fn info() -> serde_json::Value {
     INFO.with(|i| i.borrow().clone())
+}
+
+/// Route a craft-runtime worker JSON message through the Rust bridge (craft-libs#10).
+///
+/// Input: a single [`HostMessage`] serialised as JSON (same schema as the JS worker-host protocol).
+/// Output: a JSON array of [`WorkerMessage`] replies.
+///
+/// `storage_flush` messages drain the in-memory mirror into OPFS under
+/// `effectcraft-store/v1/<key>`, replacing the `craftRuntimeFlushPending` JS hook when this
+/// export is present in the worker global (`globalThis.craftRuntimeHandleRustMessage`).
+#[wasm_bindgen]
+pub fn craft_runtime_handle_message(msg: String) -> String {
+    CRAFT_BRIDGE.with(|b| b.borrow_mut().handle_worker_json(&msg))
 }
 
 /// The eframe app: the shared FilmCraft UI plus the web host's per-frame duties.

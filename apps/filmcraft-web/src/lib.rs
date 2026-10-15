@@ -17,8 +17,7 @@
 //! [`craft_runtime_bridge`] is unit-tested natively; the web shell is `wasm32`-only.
 #![cfg_attr(not(test), deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable))]
 
-#[cfg(test)]
-mod craft_runtime_bridge;
+pub(crate) mod craft_runtime_bridge;
 
 #[cfg(target_arch = "wasm32")]
 mod wasm;
