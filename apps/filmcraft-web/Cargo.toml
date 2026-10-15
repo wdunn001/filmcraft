@@ -12,8 +12,13 @@ workspace = true
 [lib]
 crate-type = ["cdylib", "rlib"]
 
-# Everything is wasm32-only: on other targets this crate is empty (so `cargo test --workspace`
-# and clippy stay cheap). Build with `cargo xtask web` (see docs/web.md).
+# The browser glue is wasm32-only; on other targets the crate holds the portable craft-runtime
+# bridge (`craft_runtime_bridge`), unit-tested natively. Build with `cargo xtask web` (see docs/web.md).
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+craft-runtime = { git = "https://github.com/wdunn001/craft-libs", rev = "7c2c52d8b818c42201a10c235bb56f5c15d643a4" }
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 filmcraft-engine = { workspace = true }
 filmcraft-ui-egui = { workspace = true }
@@ -26,7 +31,6 @@ filmcraft-format = { workspace = true }
 filmcraft-time = { workspace = true }
 egui = { workspace = true }
 eframe = { workspace = true, features = ["default_fonts", "wgpu"] }
-serde_json = { workspace = true }
 log = { workspace = true }
 wasm-bindgen = "=0.2.129"
 wasm-bindgen-futures = "0.4"

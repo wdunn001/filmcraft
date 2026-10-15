@@ -1012,12 +1012,68 @@ dependencies = [
 ]
 
 [[package]]
+name = "craft-gpu"
+version = "0.1.0"
+source = "git+https://github.com/wdunn001/craft-libs?rev=7c2c52d8b818c42201a10c235bb56f5c15d643a4#7c2c52d8b818c42201a10c235bb56f5c15d643a4"
+dependencies = [
+ "serde",
+ "thiserror 2.0.21",
+]
+
+[[package]]
+name = "craft-gpu-null"
+version = "0.1.0"
+source = "git+https://github.com/wdunn001/craft-libs?rev=7c2c52d8b818c42201a10c235bb56f5c15d643a4#7c2c52d8b818c42201a10c235bb56f5c15d643a4"
+dependencies = [
+ "craft-gpu",
+]
+
+[[package]]
+name = "craft-gpu-providers"
+version = "0.1.0"
+source = "git+https://github.com/wdunn001/craft-libs?rev=7c2c52d8b818c42201a10c235bb56f5c15d643a4#7c2c52d8b818c42201a10c235bb56f5c15d643a4"
+dependencies = [
+ "craft-gpu",
+]
+
+[[package]]
+name = "craft-runtime"
+version = "0.1.0"
+source = "git+https://github.com/wdunn001/craft-libs?rev=7c2c52d8b818c42201a10c235bb56f5c15d643a4#7c2c52d8b818c42201a10c235bb56f5c15d643a4"
+dependencies = [
+ "craft-gpu",
+ "craft-gpu-null",
+ "craft-gpu-providers",
+ "craft-tier-store",
+ "craft-worker-host",
+]
+
+[[package]]
+name = "craft-tier-store"
+version = "0.1.0"
+source = "git+https://github.com/wdunn001/craft-libs?rev=7c2c52d8b818c42201a10c235bb56f5c15d643a4#7c2c52d8b818c42201a10c235bb56f5c15d643a4"
+dependencies = [
+ "serde",
+ "thiserror 2.0.21",
+]
+
+[[package]]
 name = "craft-ui"
 version = "0.1.0"
 source = "git+https://github.com/storytold/craft-libs?rev=5c874d51eeb3de70e735c8ce87a59a7dedd47675#5c874d51eeb3de70e735c8ce87a59a7dedd47675"
 dependencies = [
  "egui",
  "serde",
+]
+
+[[package]]
+name = "craft-worker-host"
+version = "0.1.0"
+source = "git+https://github.com/wdunn001/craft-libs?rev=7c2c52d8b818c42201a10c235bb56f5c15d643a4#7c2c52d8b818c42201a10c235bb56f5c15d643a4"
+dependencies = [
+ "craft-gpu",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -2373,6 +2429,7 @@ dependencies = [
 name = "filmcraft-web"
 version = "0.7.2"
 dependencies = [
+ "craft-runtime",
  "eframe",
  "egui",
  "filmcraft-codecs",
@@ -2386,6 +2443,7 @@ dependencies = [
  "filmcraft-ui-egui",
  "js-sys",
  "log",
+ "serde",
  "serde_json",
  "wasm-bindgen",
  "wasm-bindgen-futures",
