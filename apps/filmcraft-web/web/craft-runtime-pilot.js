@@ -1,36 +1,57 @@
-// Optional smoke: ?craftRuntime=1 connects SharedWorker at /craft-worker-host.js
+// Optional smoke: craft-runtime-smoke.html or ?craftRuntime=1 (redirects to smoke page).
 import { connect } from "./craft-runtime-loader.js";
 
 function banner(text, ok) {
-  const el = document.getElementById("loading");
+  const el = document.getElementById("status") || document.getElementById("loading");
   if (!el) return;
-  const span = el.querySelector(".err") || el;
-  if (span.classList?.contains("err")) {
-    span.textContent = text;
-    span.className = ok ? "ok" : "err";
-  } else {
-    el.insertAdjacentHTML(
-      "beforeend",
-      `<p class="${ok ? "ok" : "err"}" id="craft-runtime-status">${text}</p>`,
-    );
-  }
+  el.className = ok ? "ok" : "err";
+  el.textContent = text;
+}
+
+function withTimeout(promise, ms, label) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+    }),
+  ]);
 }
 
 export async function runCraftRuntimePilot() {
-  banner("craft-runtime: connecting SharedWorker…", true);
-  const rt = connect();
-  const ready = await rt.init({
-    app_id: "filmcraft",
-    capabilities: ["tier_store"],
-  });
-  await rt.storageFlush();
-  banner(`craft-runtime ready (worker /craft-worker-host.js)`, true);
+  const params = new URLSearchParams(location.search);
+  const dedicated = /craft-runtime-smoke\.html$/i.test(location.pathname);
+  banner(
+    dedicated
+      ? "craft-runtime smoke: DedicatedWorker at /craft-dedicated-worker.js …"
+      : "craft-runtime: SharedWorker at /craft-worker-host.js …",
+    true,
+  );
+  const rt = connect({ dedicated });
+  const ready = await withTimeout(
+    rt.init({
+      app_id: "filmcraft",
+      capabilities: ["tier_store"],
+    }),
+    15000,
+    "worker init",
+  );
+  if (params.has("flush")) {
+    await withTimeout(rt.storageFlush(), 15000, "storage_flush");
+  }
+  const mode = dedicated ? "DedicatedWorker" : "SharedWorker";
+  banner(
+    `craft-runtime ready (${mode}, web-root worker).` +
+      (params.has("flush") ? " storage_flush ok." : " Add ?flush=1 to test OPFS flush."),
+    true,
+  );
   return ready;
 }
 
-if (new URLSearchParams(location.search).has("craftRuntime")) {
+const smokePage = /craft-runtime-smoke\.html$/i.test(location.pathname);
+const smokeQuery = new URLSearchParams(location.search).has("craftRuntime");
+if (smokePage || smokeQuery) {
   runCraftRuntimePilot().catch((e) => {
-    banner(`craft-runtime failed: ${e?.message || e}`, false);
+    banner(`craft-runtime failed:\n${e?.stack || e}`, false);
     console.error(e);
   });
 }
