@@ -155,3 +155,13 @@ opt-level = 3
 [profile.release]
 lto = "thin"
 codegen-units = 1
+
+
+[patch."https://github.com/wdunn001/craft-libs"]
+craft-ui = { path = "../gh-craft-libs/crates/ui" }
+craft-cloud = { path = "../gh-craft-libs/crates/cloud" }
+
+
+[patch."https://github.com/storytold/craft-libs"]
+craft-ui = { path = "../gh-craft-libs/crates/ui" }
+craft-cloud = { path = "../gh-craft-libs/crates/cloud" }

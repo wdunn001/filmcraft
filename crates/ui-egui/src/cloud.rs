@@ -358,6 +358,23 @@ impl CloudApp for FilmcraftApp {
              Media files are not uploaded; they must remain accessible by path."))
     }
 
+    fn recents(&self) -> Vec<String> {
+        self.session.prefs.general.recent_projects.clone()
+    }
+
+    fn open_recent(&mut self, path: &str) {
+        let _ = self.session.execute("file.open", json!({"path": path}));
+    }
+
+    fn browse_local(&mut self) {
+        let _ = self.pick(crate::native_dialogs::FileDialog::OpenProject, |app, paths| {
+            let Some(path) = paths.into_iter().next() else {
+                return Ok(json!(null));
+            };
+            app.session.execute("file.open", json!({"path": path})).map_err(|e| e.to_string())
+        });
+    }
+
     fn style(&self, _ui: &Ui) -> craft_ui::cloud::CloudStyle {
         let t = &self.tokens;
         craft_ui::cloud::CloudStyle {
