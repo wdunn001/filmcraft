@@ -70,20 +70,20 @@ log = "0.4"
 rayon = "1"
 proptest = "1"
 roxmltree = "0.21"
-craft-docpath = { version = "0.1.0", git = "https://github.com/storytold/craft-libs", rev = "82a24b006eefa036b43c09a67fb9a3fbd17ffe63" }
+craft-docpath = {version = "0.1.0", git = "https://github.com/wdunn001/craft-libs", branch = "quasarke"}
 
 # ui
 # One craft-libs rev for craft-ui and craft-cloud, matching collab-craft 3c77c3e's pin.
 # Two revisions produce two Capability/Entry/ShareBackend types and the build fails.
-craft-ui = { git = "https://github.com/wdunn001/craft-libs", rev = "6f0a6d2", features = ["serde"] }
+craft-ui = {git = "https://github.com/wdunn001/craft-libs", branch = "quasarke", features = ["serde"]}
 # Vendor-neutral cloud contracts (Entry, Capability, Files/Sharing traits). No IO, no provider
 # names: buildable for the web and testable with no service.
-craft-cloud = { git = "https://github.com/wdunn001/craft-libs", rev = "6f0a6d2" }
+craft-cloud = {git = "https://github.com/wdunn001/craft-libs", branch = "quasarke"}
 # HTTP transport to CollabCraft. No provider credential or URL compiled in.
-craft-cloud-client = { git = "https://github.com/wdunn001/collab-craft", rev = "3c77c3e" }
+craft-cloud-client = {git = "https://github.com/wdunn001/collab-craft", branch = "quasarke"}
 # The share dialog's backend: the half that opens a socket to CollabCraft. craft-ui states the
 # work; this crate answers it. Lives in the host application because the session lives there.
-collabcraft-share = { git = "https://github.com/wdunn001/collab-craft", rev = "3c77c3e" }
+collabcraft-share = {git = "https://github.com/wdunn001/collab-craft", branch = "quasarke"}
 egui = "0.36"
 eframe = { version = "0.36", default-features = false }
 egui_kittest = "0.36"
@@ -162,6 +162,6 @@ craft-ui = { path = "../gh-craft-libs/crates/ui" }
 craft-cloud = { path = "../gh-craft-libs/crates/cloud" }
 
 
-[patch."https://github.com/storytold/craft-libs"]
+[patch."https://github.com/wdunn001/craft-libs"]
 craft-ui = { path = "../gh-craft-libs/crates/ui" }
 craft-cloud = { path = "../gh-craft-libs/crates/cloud" }
